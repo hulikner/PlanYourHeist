@@ -13,6 +13,132 @@ namespace PlanYourHeist
             Console.WriteLine("How many trials would you like to run?");
             int trialRuns = Int32.Parse(Console.ReadLine());
 
+            Hacker jon = new Hacker()
+            {
+                Name = "Jon",
+                SkillLevel = 50,
+                CourageFactor = 50,
+                PercentageCut = 10
+            };
+            LockSpecialist jack = new LockSpecialist()
+            {
+                Name = "Jack",
+                SkillLevel = 50,
+                CourageFactor = 50,
+                PercentageCut = 10
+            };
+            Muscle bruce = new Muscle()
+            {
+                Name = "Bruce",
+                SkillLevel = 50,
+                CourageFactor = 50,
+                PercentageCut = 10
+            };
+            Hacker jill = new Hacker()
+            {
+                Name = "Jill",
+                SkillLevel = 50,
+                CourageFactor = 50,
+                PercentageCut = 10
+            };
+            LockSpecialist bill = new LockSpecialist()
+            {
+                Name = "Bill",
+                SkillLevel = 50,
+                CourageFactor = 50,
+                PercentageCut = 10
+            };
+            Muscle rocky = new Muscle()
+            {
+                Name = "Rocky",
+                SkillLevel = 50,
+                CourageFactor = 50,
+                PercentageCut = 10
+            };
+
+            List<IRobber> rolodex = new List<IRobber>()
+            {
+                jon, jack, bruce, jill, bill, rocky
+            };
+            string newOp = "operative";
+            while(newOp != "")
+            {
+            Console.WriteLine($"{rolodex.Count} available operatives");
+            Console.WriteLine("New Operative? Enter Name...");
+            newOp = Console.ReadLine();
+            Console.WriteLine("What is the operatives specialty?");
+            Console.WriteLine("1) Hacker (Disables alarms)");
+            Console.WriteLine("2) Muscle (Disarms guards)");
+            Console.WriteLine("3) Lock Specialist (cracks vault)");
+            int opSkillChoice = Int32.Parse(Console.ReadLine());
+            Console.WriteLine("Enter the operatives skill level (1-100)");
+            int opSkillLevel = Int32.Parse(Console.ReadLine());
+            Console.WriteLine("What is the operatives demanded cut?");
+            int opCut = Int32.Parse(Console.ReadLine());
+            if (opSkillChoice == 1)
+            {
+            Hacker operative = new Hacker()
+            {
+                Name = newOp,
+                SkillLevel = opSkillChoice,
+                PercentageCut = opCut
+            };
+                rolodex.Add(operative);
+            }
+            else if (opSkillChoice == 2)
+            {
+            Muscle operative = new Muscle()
+            {
+                Name = newOp,
+                SkillLevel = opSkillChoice,
+                PercentageCut = opCut
+            };
+                rolodex.Add(operative);
+            }
+            else
+            {
+            LockSpecialist operative = new LockSpecialist()
+            {
+                Name = newOp,
+                SkillLevel = opSkillChoice,
+                PercentageCut = opCut
+            };
+                rolodex.Add(operative);
+            }
+            }
+
+            Random random = new Random();
+            Bank targetBank = new Bank()
+            {
+                AlarmScore = random.Next(0,101),
+                VaultScore = random.Next(0,101),
+                SecurityGuardScore = random.Next(0,101),
+                CashOnHand = random.Next(50000,1000001)
+            };
+
+            string large = "";
+            string small = "";
+            int a = targetBank.AlarmScore;
+            int b = targetBank.VaultScore;
+            int c = targetBank.SecurityGuardScore;
+
+            if (a > b && a > c)
+                large = "Alarm System";
+            else if (b > a && b > c)
+                large = "Vault";
+            else if (c > a && c > b)
+                large = "Security Guards";
+
+            if (a < b && a < c)
+                small = "Alarm System";
+            else if (b < a && b < c)
+                small = "Vault";
+            else if (c < a && c < b)
+                small = "Security Guards";
+            Console.WriteLine($"The {large} is the most secure and the {small} is the most insecure.");
+
+            
+
             for(int i=0; i<trialRuns; i++)
             {
             string memberName = "member";
@@ -27,7 +153,7 @@ namespace PlanYourHeist
             int memberSkillLevel = Int32.Parse(Console.ReadLine());
             Console.WriteLine("and their courage factor...?");
             double memberCourageFactor = Int32.Parse(Console.ReadLine());
-            TeamMember newMember = new TeamMember(memberName, memberSkillLevel, memberCourageFactor);
+            TeamMember newMember = new TeamMember(){Name = memberName, SkillLevel = memberSkillLevel, CourageFactor = memberCourageFactor};
             myTeam.Add(newMember);
             }
             }
@@ -50,7 +176,6 @@ namespace PlanYourHeist
             }
             Console.WriteLine(myTeam.Count);
 
-            var random = new Random();
             var luck = random.Next(-10, 10);
             int bankDiffLvl = diffLvl;
             int teamLvl = 0;
