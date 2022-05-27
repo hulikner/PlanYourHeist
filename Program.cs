@@ -8,10 +8,10 @@ namespace PlanYourHeist
         static void Main(string[] args)
         {
             Console.WriteLine("Plan Your Heist!");
-            Console.WriteLine("What difficulty?");
-            int diffLvl = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("How many trials would you like to run?");
-            int trialRuns = Int32.Parse(Console.ReadLine());
+            // Console.WriteLine("What difficulty?");
+            // int diffLvl = 0;
+            // Console.WriteLine("How many trials would you like to run?");
+            // int trialRuns = Int32.Parse(Console.ReadLine());
 
             Hacker jon = new Hacker()
             {
@@ -56,6 +56,8 @@ namespace PlanYourHeist
                 PercentageCut = 10
             };
 
+
+
             List<IRobber> rolodex = new List<IRobber>()
             {
                 jon, jack, bruce, jill, bill, rocky
@@ -66,6 +68,8 @@ namespace PlanYourHeist
             Console.WriteLine($"{rolodex.Count} available operatives");
             Console.WriteLine("New Operative? Enter Name...");
             newOp = Console.ReadLine();
+            if(newOp != "")
+            {
             Console.WriteLine("What is the operatives specialty?");
             Console.WriteLine("1) Hacker (Disables alarms)");
             Console.WriteLine("2) Muscle (Disarms guards)");
@@ -80,7 +84,7 @@ namespace PlanYourHeist
             Hacker operative = new Hacker()
             {
                 Name = newOp,
-                SkillLevel = opSkillChoice,
+                SkillLevel = opSkillLevel,
                 PercentageCut = opCut
             };
                 rolodex.Add(operative);
@@ -90,7 +94,7 @@ namespace PlanYourHeist
             Muscle operative = new Muscle()
             {
                 Name = newOp,
-                SkillLevel = opSkillChoice,
+                SkillLevel = opSkillLevel,
                 PercentageCut = opCut
             };
                 rolodex.Add(operative);
@@ -100,13 +104,13 @@ namespace PlanYourHeist
             LockSpecialist operative = new LockSpecialist()
             {
                 Name = newOp,
-                SkillLevel = opSkillChoice,
+                SkillLevel = opSkillLevel,
                 PercentageCut = opCut
             };
                 rolodex.Add(operative);
             }
             }
-
+            }
             Random random = new Random();
             Bank targetBank = new Bank()
             {
@@ -136,66 +140,124 @@ namespace PlanYourHeist
             else if (c < a && c < b)
                 small = "Security Guards";
             Console.WriteLine($"The {large} is the most secure and the {small} is the most insecure.");
-
+            List<IRobber> selectFrom = new List<IRobber>();
+            selectFrom = rolodex;
+            List<IRobber> crew = new List<IRobber>();
+            int select = 1;
+            while(select != 0)
+            {
+                Console.WriteLine("Choose a crew member");
+                Console.WriteLine();
+                Console.WriteLine("Or choose 0 to start.");
+                Console.WriteLine();
+            for(int i=0; i<selectFrom.Count; i++)
+            {
+                Console.WriteLine($"{i+1}) {selectFrom[i].Name}, {selectFrom[i].Specialty}, Skill Level = {selectFrom[i].SkillLevel}, Percentage Cut = {selectFrom[i].PercentageCut}");
+            }
+                select = Int32.Parse(Console.ReadLine());
+                if(select != 0)
+                {
+                crew.Add(selectFrom[select - 1]);
+                selectFrom.Remove(selectFrom[select-1]);
+                }
+                else {break;}
+            }
+            Console.WriteLine($"{targetBank.CashOnHand}");
+            foreach(IRobber member in crew)
+            {
+                member.PerformSkill(targetBank);
+                member.PercentageCut = member.PercentageCut / 100;
+                member.BankLoot = member.PercentageCut * targetBank.CashOnHand;
+            }
+            foreach(IRobber member in crew)
+            {
+                targetBank.CashOnHand = targetBank.CashOnHand - member.BankLoot;
+            }
             
-
-            for(int i=0; i<trialRuns; i++)
+            if(targetBank.AlarmScore <= 0 && targetBank.VaultScore <= 0 && targetBank.SecurityGuardScore <= 0)
             {
-            string memberName = "member";
-            List<TeamMember> myTeam = new List<TeamMember>();
-            while(memberName !="")
-            {
-            Console.WriteLine("Enter a Team Members Name.");
-            memberName = Console.ReadLine();
-            if(memberName != "")
-            {
-            Console.WriteLine("This members skill level is...");
-            int memberSkillLevel = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("and their courage factor...?");
-            double memberCourageFactor = Int32.Parse(Console.ReadLine());
-            TeamMember newMember = new TeamMember(){Name = memberName, SkillLevel = memberSkillLevel, CourageFactor = memberCourageFactor};
-            myTeam.Add(newMember);
+                Console.WriteLine("Success!");
+                foreach(IRobber member in crew)
+                {
+                    Console.WriteLine($"{member.Name}'s cut is {member.BankLoot}");
+                }
+                    Console.WriteLine($"Whats left for you is{targetBank.CashOnHand}");
             }
-            }
-
-            // TeamMember newMember2 = new TeamMember("derick", 4, 2.2);
-            // TeamMember newMember3 = new TeamMember("karla", 5, 1.1);
-            // TeamMember newMember4 = new TeamMember("olivia", 10, 0.1);
-            // TeamMember newMember5 = new TeamMember("jordan", 10, 10.0);
-            // myTeam.Add(newMember2);
-            // myTeam.Add(newMember3);
-            // myTeam.Add(newMember4);
-            // myTeam.Add(newMember5);
-
-            
-            Console.WriteLine();
-            Console.WriteLine($"{myTeam.Count} Team Members");
-            foreach(TeamMember member in myTeam)
-            {
-                Console.WriteLine($"{member.Name}, {member.SkillLevel}, {member.CourageFactor}");
-            }
-            Console.WriteLine(myTeam.Count);
-
-            var luck = random.Next(-10, 10);
-            int bankDiffLvl = diffLvl;
-            int teamLvl = 0;
-            bankDiffLvl = bankDiffLvl + luck;
-            foreach(TeamMember member in myTeam)
-            {
-                teamLvl += member.SkillLevel;
-            }
-            Console.WriteLine(teamLvl);
-            Console.WriteLine(bankDiffLvl);
-
-            if(teamLvl > bankDiffLvl)
-            {
-                Console.WriteLine("Sucess");
-            }
-            if(teamLvl < bankDiffLvl)
+            else
             {
                 Console.WriteLine("Failure");
             }
-            }
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // for(int i=0; i<trialRuns; i++)
+            // {
+            // string memberName = "member";
+            // List<TeamMember> myTeam = new List<TeamMember>();
+            // while(memberName !="")
+            // {
+            // Console.WriteLine("Enter a Team Members Name.");
+            // memberName = Console.ReadLine();
+            // if(memberName != "")
+            // {
+            // Console.WriteLine("This members skill level is...");
+            // int memberSkillLevel = Int32.Parse(Console.ReadLine());
+            // Console.WriteLine("and their courage factor...?");
+            // double memberCourageFactor = Int32.Parse(Console.ReadLine());
+            // TeamMember newMember = new TeamMember(){Name = memberName, SkillLevel = memberSkillLevel, CourageFactor = memberCourageFactor};
+            // myTeam.Add(newMember);
+            // }
+            // }
+
+            // // TeamMember newMember2 = new TeamMember("derick", 4, 2.2);
+            // // TeamMember newMember3 = new TeamMember("karla", 5, 1.1);
+            // // TeamMember newMember4 = new TeamMember("olivia", 10, 0.1);
+            // // TeamMember newMember5 = new TeamMember("jordan", 10, 10.0);
+            // // myTeam.Add(newMember2);
+            // // myTeam.Add(newMember3);
+            // // myTeam.Add(newMember4);
+            // // myTeam.Add(newMember5);
+
+            
+            // Console.WriteLine();
+            // Console.WriteLine($"{myTeam.Count} Team Members");
+            // foreach(TeamMember member in myTeam)
+            // {
+            //     Console.WriteLine($"{member.Name}, {member.SkillLevel}, {member.CourageFactor}");
+            // }
+            // Console.WriteLine(myTeam.Count);
+
+            // var luck = random.Next(-10, 10);
+            // int bankDiffLvl = diffLvl;
+            // int teamLvl = 0;
+            // bankDiffLvl = bankDiffLvl + luck;
+            // foreach(TeamMember member in myTeam)
+            // {
+            //     teamLvl += member.SkillLevel;
+            // }
+            // Console.WriteLine(teamLvl);
+            // Console.WriteLine(bankDiffLvl);
+
+            // if(teamLvl > bankDiffLvl)
+            // {
+            //     Console.WriteLine("Sucess");
+            // }
+            // if(teamLvl < bankDiffLvl)
+            // {
+            //     Console.WriteLine("Failure");
+            // }
+            // }
 
             
 

@@ -5,9 +5,11 @@ namespace PlanYourHeist
    public class TeamMember : IRobber
    {
         public string Name {get;set;}
+        public virtual string Specialty {get;set;} = "";
         public int SkillLevel {get;set;}
         public double CourageFactor{get;set;}
-        public int PercentageCut {get;set;}
+        public double PercentageCut {get;set;}
+        public double BankLoot {get;set;} = 0;
         // public TeamMember(string name, int skillLevel, double courageFactor)
         // {
         //     Name = name;

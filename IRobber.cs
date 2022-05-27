@@ -6,7 +6,9 @@ namespace PlanYourHeist
    {
         string Name {get;set;}
         int SkillLevel {get;set;}
-        int PercentageCut {get;set;}
+        double PercentageCut {get;set;}
+        string Specialty {get;set;}
+        double BankLoot {get;set;}
         void PerformSkill(Bank bank);
    }
 

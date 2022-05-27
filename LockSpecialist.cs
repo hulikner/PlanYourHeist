@@ -5,6 +5,8 @@ namespace PlanYourHeist
 {
    public class LockSpecialist : TeamMember
    {
+        public override string Specialty {get;set;} = "Lock Specialist";
+
         public override void PerformSkill(Bank bank)
        {
            Console.WriteLine($"{Name} is picking the vault. Decreased security {SkillLevel} points");

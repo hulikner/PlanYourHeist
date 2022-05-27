@@ -5,6 +5,8 @@ namespace PlanYourHeist
 {
    public class Hacker : TeamMember
    {
+        public override string Specialty {get;set;} = "Hacker";
+
        public override void PerformSkill(Bank bank)
        {
            Console.WriteLine($"{Name} is hacking the alarm system. Decreased security {SkillLevel} points");
