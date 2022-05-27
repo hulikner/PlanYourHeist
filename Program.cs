@@ -144,7 +144,7 @@ namespace PlanYourHeist
             selectFrom = rolodex;
             List<IRobber> crew = new List<IRobber>();
             int select = 1;
-            while(select != 0)
+            while(select != 0 && selectFrom.Count != 0)
             {
                 Console.WriteLine("Choose a crew member");
                 Console.WriteLine();
@@ -166,7 +166,7 @@ namespace PlanYourHeist
             foreach(IRobber member in crew)
             {
                 member.PerformSkill(targetBank);
-                member.PercentageCut = member.PercentageCut / 100;
+                member.PercentageCut = member.PercentageCut * 0.01;
                 member.BankLoot = member.PercentageCut * targetBank.CashOnHand;
             }
             foreach(IRobber member in crew)
@@ -179,9 +179,9 @@ namespace PlanYourHeist
                 Console.WriteLine("Success!");
                 foreach(IRobber member in crew)
                 {
-                    Console.WriteLine($"{member.Name}'s cut is {member.BankLoot}");
+                    Console.WriteLine($"{member.Name}'s cut is ${Math.Round(member.BankLoot)}");
                 }
-                    Console.WriteLine($"Whats left for you is{targetBank.CashOnHand}");
+                    Console.WriteLine($"Whats left for you is ${Math.Round(targetBank.CashOnHand)}");
             }
             else
             {
